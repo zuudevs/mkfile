@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file. This projec
 ## Unreleased
 
 - Added: Initial roadmap and changelog files
+- Changed: Clarified release notes format and contributor guidance
+- Chore: Sync `docs/ROADMAP.md` and improve wording
 
 ## [0.1.0] - Initial
 
@@ -12,6 +14,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [0.2.0] - Dirty Code
 - Implementing basic functional to create a file.
+
+## [0.3.0] - Misc
+- Improved: File creation functionality and CLI handling
+- Fixed: Minor build and formatting issues
 
 ### How to write changelog entries
 - Use prefixes: `Added`, `Changed`, `Fixed`, `Removed`, `Security`
