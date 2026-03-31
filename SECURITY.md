@@ -2,7 +2,7 @@
 
 Jika Anda menemukan kerentanan atau masalah keamanan pada proyek ini, mohon laporkan dengan cara berikut:
 
-- Kirim email ke: security@example.com
+- Kirim email ke: zuudevs@gmail.com
 - Subjek: [mkfile] Laporan Keamanan - <singkat>
 
 Dalam laporan, sertakan:

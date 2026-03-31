@@ -1,46 +1,86 @@
 /**
  * @file mkfile.cpp
- * @author zuudevs
+ * @author zuudevs (zuudevs@gmail.com)
  * @brief CLI tool to create files (similar to touch)
  * @version 1.0.0
  * @date 2026-04-01
  */
 
-#include <print>
 #include <filesystem>
 #include <fstream>
+#include <print>
 #include <string_view>
 #include <vector>
 
 using namespace std;
 namespace fs = std::filesystem;
 
+namespace credit {
+	constexpr std::string_view author = "zuudevs";
+	constexpr std::string_view version = "1.0.0";
+	constexpr std::string_view email = "zuudevs@gmail.com";
+	constexpr std::string_view repository = "https://github.com/zuudevs/mkfile.git";
+} // namespace credit
+
 // ANSI colors (portable escape)
-constexpr std::string_view ANSI_RED    = "\033[0;31m";
-constexpr std::string_view ANSI_GREEN  = "\033[0;32m";
-constexpr std::string_view ANSI_YELLOW = "\033[0;33m";
-constexpr std::string_view ANSI_BLUE   = "\033[0;34m";
-constexpr std::string_view ANSI_CYAN   = "\033[0;36m";
-constexpr std::string_view ANSI_WHITE  = "\033[0;37m";
+namespace ansi {
+	constexpr std::string_view red = "\033[0;31m";
+	constexpr std::string_view green = "\033[0;32m";
+	constexpr std::string_view yellow = "\033[0;33m";
+	constexpr std::string_view blue = "\033[0;34m";
+	constexpr std::string_view cyan = "\033[0;36m";
+	constexpr std::string_view white = "\033[0;37m";
+} // namespace ansi
 
 inline bool is_verbose = false;
 
-std::string colorize(std::string_view str, std::string_view color) noexcept {
-	return std::string(color) + str.data() + ANSI_WHITE.data();
+std::string colorize(
+	std::string_view str, 
+	std::string_view color
+) noexcept {
+    return std::string(color) + str.data() + ansi::white.data();
+}
+
+void print_about() {
+	println("author: {}", colorize(credit::author, ansi::blue));
+	println("email: {}", colorize(credit::email, ansi::blue));
+	println("repository: {}", colorize(credit::repository, ansi::blue));
+	println("version: {}", colorize(credit::version, ansi::blue));
 }
 
 void print_version() {
-    println("{}mkfile version 1.0.0{}", ANSI_BLUE, ANSI_WHITE);
+    println(
+		"mkfile version {}", 
+		colorize(credit::version, ansi::blue)
+	);
     println("--------------------------------------------------");
-    println("Maintained by {}zuudevs{}", ANSI_BLUE, ANSI_WHITE);
+    println(
+		"Maintained by {}", 
+		colorize(credit::author, ansi::blue)
+	);
 }
 
 void print_help() {
-    println("{}Usage:{} mkfile [OPTIONS] <files...>", ANSI_BLUE, ANSI_WHITE);
+    println(
+		"{} mkfile [OPTIONS] <files...>", 
+		colorize("Usage:", ansi::blue)
+	);
     println();
-    println("{:>6}, {:<12} Show help", colorize("-h", ANSI_CYAN), colorize("--help", ANSI_CYAN));
-    println("{:>6}, {:<12} Show version", colorize("-v", ANSI_CYAN), colorize("--version", ANSI_CYAN));
-    println("{:>6}, {:<12} Verbose output", colorize("-V", ANSI_CYAN), colorize("--verbose", ANSI_CYAN));
+    println(
+		"{:>6}, {:<12} Show help", 
+		colorize("-h", ansi::cyan), 
+		colorize("--help", ansi::cyan)
+	);
+    println(
+		"{:>6}, {:<12} Show version", 
+		colorize("-v", ansi::cyan), 
+		colorize("--version", ansi::cyan)
+	);
+    println(
+		"{:>6}, {:<12} Verbose output", 
+		colorize("-V", ansi::cyan),
+        colorize("--verbose", ansi::cyan)
+	);
 }
 
 void create_file(std::string_view filename) {
@@ -55,27 +95,44 @@ void create_file(std::string_view filename) {
         if (!fs::exists(path)) {
             std::ofstream file(path);
             if (!file) {
-                println("{} Failed to create {}", colorize("ERROR:", ANSI_RED), filename);
+                println(
+					"{} Failed to create {}", 
+					colorize("ERROR:", ansi::red), 
+					filename
+				);
                 return;
             }
 
             if (is_verbose) {
-                println("{} Created file {}", colorize("SUCCESS:", ANSI_GREEN), filename);
+                println(
+					"{} Created file {}", 
+					colorize("SUCCESS:", ansi::green), 
+					filename
+				);
             }
         } else {
             // mimic touch → update timestamp
             fs::last_write_time(path, fs::file_time_type::clock::now());
 
             if (is_verbose) {
-                println("{} Updated timestamp {}", colorize("INFO:", ANSI_YELLOW), filename);
+                println(
+					"{} Updated timestamp {}", 
+					colorize("INFO:", ansi::yellow), 
+					filename
+				);
             }
         }
-    } catch (const std::exception& e) {
-        println("{} {} ({})", colorize("ERROR:", ANSI_RED), filename, e.what());
+    } catch (const std::exception &e) {
+        println(
+			"{} {} ({})", 
+			colorize("ERROR:", ansi::red), 
+			filename, 
+			e.what()
+		);
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     if (argc < 2) {
         print_help();
         return 0;
@@ -95,7 +152,11 @@ int main(int argc, char* argv[]) {
         } else if (arg == "-V" || arg == "--verbose") {
             is_verbose = true;
         } else if (arg.starts_with("-")) {
-            println("{} Unknown option {}", colorize("ERROR:", ANSI_RED), arg);
+            println(
+				"{} Unknown option {}", 
+				colorize("ERROR:", ansi::red), 
+				arg
+			);
             return 1;
         } else {
             files.push_back(arg);
@@ -103,11 +164,14 @@ int main(int argc, char* argv[]) {
     }
 
     if (files.empty()) {
-        println("{} No file specified", colorize("ERROR:", ANSI_RED));
+        println(
+			"{} No file specified", 
+			colorize("ERROR:", ansi::red)
+		);
         return 1;
     }
 
-    for (const auto& file : files) {
+    for (const auto &file : files) {
         create_file(file);
     }
 
