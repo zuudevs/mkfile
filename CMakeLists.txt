@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(
 	mkfile
-	DESCRIPTION "tool to make a file"
+	DESCRIPTION "A CLI utility for creating files"
 	VERSION 1.0.0
 	LANGUAGES CXX
 )
